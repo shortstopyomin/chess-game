@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grandmaster Chess - Play vs AI or Local</title>
+    <meta name="description" content="Experience a premium, responsive web chess game. Play against a powerful Minimax AI in real-time or challenge your friends locally. Features sleek glassmorphism, multiple themes, custom chess clocks, and high-fidelity sound.">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Grandmaster Chess - Premium Web Chess Game">
+    <meta property="og:description" content="Play chess online or offline with a responsive, stunning interface. Challenger Minimax AI, toggle themes, track captures, and enjoy synthesized Audio.">
+    <meta property="og:type" content="website">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="theme-carbon">
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <svg class="crown-icon" viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                    <path d="M2 22h20v-2H2v2zm2-4h16V7l-4 4-4-6-4 6-4-4v11zm8-11.83L14.73 9.7l3.27-3.27v7.4H6V6.43l3.27 3.27L12 6.17z"/>
+                </svg>
+                <h1>Grandmaster <span class="gradient-text">Chess</span></h1>
+            </div>
+            <div class="header-status" id="header-status">
+                <span class="pulse-indicator"></span> White's Turn
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <main class="main-layout">
+            <!-- Left Side: Board & Coordinates -->
+            <section class="board-wrapper">
+                <div class="player-bar opponent-bar" id="opponent-info">
+                    <div class="player-meta">
+                        <div class="player-avatar" id="opponent-avatar">👤</div>
+                        <div class="player-details">
+                            <span class="player-name" id="opponent-name">Player 2 (Black)</span>
+                            <span class="captured-badges" id="opponent-captures"></span>
+                        </div>
+                    </div>
+                    <div class="timer" id="opponent-timer">10:00</div>
+                </div>
+
+                <div class="board-outer-container">
+                    <!-- Files labels top (for flip flexibility, we can just use absolute CSS coordinates) -->
+                    <div class="chessboard-container">
+                        <!-- Left coordinate labels (8-1) -->
+                        <div class="coordinates rank-coordinates" id="rank-coords">
+                            <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+                        </div>
+                        
+                        <div class="board-interactive-area">
+                            <div id="chessboard" class="chessboard"></div>
+                            
+                            <!-- Promotion Overlay -->
+                            <div id="promotion-overlay" class="modal-overlay hidden">
+                                <div class="promotion-modal">
+                                    <h3>Promote Pawn</h3>
+                                    <div class="promotion-options">
+                                        <button class="promo-btn" data-piece="q" title="Queen">♛</button>
+                                        <button class="promo-btn" data-piece="r" title="Rook">♜</button>
+                                        <button class="promo-btn" data-piece="b" title="Bishop">♝</button>
+                                        <button class="promo-btn" data-piece="n" title="Knight">♞</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Game Over Overlay -->
+                            <div id="gameover-overlay" class="modal-overlay hidden">
+                                <div class="gameover-modal">
+                                    <div class="modal-crown">👑</div>
+                                    <h2 id="gameover-title">Checkmate!</h2>
+                                    <p id="gameover-reason">White wins by checkmate.</p>
+                                    <button class="btn-primary" id="btn-restart-modal">Play Again</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom coordinate labels (A-H) -->
+                        <div class="coordinates file-coordinates" id="file-coords">
+                            <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="player-bar player-self-bar" id="player-info">
+                    <div class="player-meta">
+                        <div class="player-avatar">👤</div>
+                        <div class="player-details">
+                            <span class="player-name" id="player-name">Player 1 (White)</span>
+                            <span class="captured-badges" id="player-captures"></span>
+                        </div>
+                    </div>
+                    <div class="timer" id="player-timer">10:00</div>
+                </div>
+            </section>
+
+            <!-- Right Side: Sidebar Panels -->
+            <section class="sidebar-panel">
+                <!-- Settings Panel -->
+                <div class="glass-card panel-settings">
+                    <h2>Game Settings</h2>
+                    
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="select-clock">Time Control</label>
+                            <select id="select-clock">
+                                <option value="none">Untimed</option>
+                                <option value="1">Bullet (1 min)</option>
+                                <option value="3">Blitz (3 min)</option>
+                                <option value="5">Blitz (5 min)</option>
+                                <option value="10" selected>Rapid (10 min)</option>
+                                <option value="30">Classical (30 min)</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <label for="select-theme">Visual Theme</label>
+                            <select id="select-theme">
+                                <option value="carbon">Carbon Dark</option>
+                                <option value="wood">Royal Wood</option>
+                                <option value="neon">Cyberpunk Neon</option>
+                                <option value="glass">Ice Glass</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History & Analysis Panel -->
+                <div class="glass-card panel-moves">
+                    <div class="panel-header-row">
+                        <h2>Move History</h2>
+                        <span class="badge" id="move-count">0 moves</span>
+                    </div>
+                    <div class="moves-log-container" id="moves-log">
+                        <div class="empty-log-msg">No moves played yet</div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="glass-card panel-controls">
+                    <div class="control-buttons-row">
+                        <button class="btn-icon" id="btn-undo" title="Undo Move">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
+                            </svg>
+                            <span>Undo</span>
+                        </button>
+                        <button class="btn-icon" id="btn-redo" title="Redo Move" disabled>
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/>
+                            </svg>
+                            <span>Redo</span>
+                        </button>
+                        <button class="btn-icon" id="btn-flip" title="Flip Board">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>
+                            </svg>
+                            <span>Flip</span>
+                        </button>
+                        <button class="btn-secondary" id="btn-restart">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right:6px; vertical-align:middle;">
+                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                            </svg>
+                            <span>New Game</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Export/Import FEN -->
+                <div class="glass-card panel-fen">
+                    <h2>FEN Operations</h2>
+                    <div class="fen-input-row">
+                        <input type="text" id="fen-string-input" placeholder="Paste FEN here..." aria-label="FEN String">
+                        <button class="btn-text" id="btn-load-fen">Load</button>
+                        <button class="btn-text" id="btn-copy-fen">Copy Current</button>
+                    </div>
+                    <div class="status-msg hidden" id="fen-status">FEN copied to clipboard!</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Application Script Files -->
+    <script src="js/chess-engine.js"></script>
+    <script src="js/chess-audio.js"></script>
+    <script src="js/chess-ui.js"></script>
+</body>
+</html>
