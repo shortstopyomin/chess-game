@@ -1,0 +1,138 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMBO5wEGpRE61+OjYtM6gIs",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/shortstopyomin/chess-game/blob/main/python_class_HW3\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# ==========================================\n",
+        "# 函數 1：負責「收集成績」\n",
+        "# ==========================================\n",
+        "def collect_scores():\n",
+        "    print(\"我是function 名 collect_scores()\")\n",
+        "    print(\"=== 開始輸入數學成績 (輸入 q 結束) ===\")\n",
+        "    scores_array = []\n",
+        "\n",
+        "    while True:\n",
+        "        user_input = input(\"請輸入成績: \")\n",
+        "\n",
+        "        if user_input == 'q':\n",
+        "            break\n",
+        "\n",
+        "        score = int(user_input)\n",
+        "        scores_array.append(score)\n",
+        "\n",
+        "    return scores_array\n",
+        "\n",
+        "\n",
+        "# ==========================================\n",
+        "# 函數 2：負責「列印成績」\n",
+        "# ==========================================\n",
+        "def print_scores(data_list):\n",
+        "    print(\"\\n=== 成績清單 === , 我是function print_scores\")\n",
+        "    for i in range(len(data_list)):\n",
+        "        print(f\"第 {i+1} 位學生的成績: {data_list[i]} 分\")\n",
+        "\n",
+        "\n",
+        "# ==========================================\n",
+        "# 函數 3：負責「計算平均」\n",
+        "# ==========================================\n",
+        "def calculate_average(data_list):\n",
+        "    if len(data_list) == 0:\n",
+        "        print(\"沒有成績可以計算平均。\")\n",
+        "        return\n",
+        "\n",
+        "    total = sum(data_list)\n",
+        "    count = len(data_list)\n",
+        "    average = total / count\n",
+        "\n",
+        "    print(\"-\" * 20)\n",
+        "    print(f\"全班總分: {total} 分\")\n",
+        "    print(f\"全班平均: {average} 分\")\n",
+        "\n",
+        "\n",
+        "# ==========================================\n",
+        "# 函數 4 (修改版)：手寫迴圈找出最高分 (打擂台演算法)\n",
+        "# ==========================================\n",
+        "def find_highest_score_manual(data_list):\n",
+        "    \"\"\"不使用 max()，透過迴圈比對找出陣列中的最高分\"\"\"\n",
+        "\n",
+        "    if len(data_list) == 0:\n",
+        "        return\n",
+        "\n",
+        "    # 步驟 1：先預設陣列的第一個元素 (index 0) 是目前的最高分 (擂台主)\n",
+        "    current_highest = data_list[0]\n",
+        "\n",
+        "    # 步驟 2：用迴圈把陣列裡的每一個分數都拿出來比較\n",
+        "    for score in data_list:\n",
+        "        # 如果拿出來的分數 (挑戰者)，比目前的最高分 (擂台主) 還要大\n",
+        "        if score > current_highest:\n",
+        "            # 挑戰成功！更新最高分為這個新的數字\n",
+        "            current_highest = score\n",
+        "\n",
+        "    # 迴圈結束後，current_highest 裡面裝的一定就是全班最高分\n",
+        "    print(f\"全班最高分: {current_highest} 分\")\n",
+        "    print(\"-\" * 20)\n",
+        "\n",
+        "\n",
+        "# ==========================================\n",
+        "# 主程式 (Main Program)\n",
+        "# ==========================================\n",
+        "# 1. 收集資料\n",
+        "math_scores = collect_scores()\n",
+        "\n",
+        "# 2. 列印所有成績\n",
+        "print_scores(math_scores)\n",
+        "\n",
+        "# 3. 計算並印出平均\n",
+        "# calculate_average(math_scores)\n",
+        "\n",
+        "# 4. 找出並印出最高分 (使用手寫迴圈版本)\n",
+        "#find_highest_score_manual(math_scores)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "v8LHEw3Oa-M0",
+        "outputId": "60d7284a-4dc8-4b62-8e30-9a1d411578b3"
+      },
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "我是function 名 collect_scores()\n",
+            "\n",
+            "=== 成績清單 === , 我是function print_scores\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
